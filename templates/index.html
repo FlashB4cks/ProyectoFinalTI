@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKParts ERP — {{ nombre }}</title>
+    <meta name="description" content="Sistema ERP para MKParts - Gestión de repuestos de motocicletas">
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script>
+        // Inyectar CSRF token para los fetch() del frontend
+        const DJANGO_CSRF = '{{ csrf_token }}';
+        const CURRENT_USER = {
+            id: {{ user.id }},
+            nombre: "{{ nombre }}",
+            rol: "{{ rol }}",
+            es_admin: {{ user.is_superuser|yesno:"true,false" }}
+        };
+    </script>
+</head>
+<body>
+    <div class="erp-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-motorcycle" style="font-size:1.5rem; color:var(--accent)"></i>
+                <span style="font-weight:800; font-size:1.1rem">MK<span style="color:var(--accent)">Parts</span></span>
+            </div>
+            <ul class="nav-links">
+                <li class="active" id="nav-dashboard" onclick="showModule('dashboard', event)">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </li>
+                <li id="nav-ventas" onclick="showModule('ventas', event)">
+                    <i class="fa-solid fa-receipt"></i> Ventas
+                </li>
+                <li id="nav-inventario" onclick="showModule('inventario', event)">
+                    <i class="fa-solid fa-boxes-stacked"></i> Inventario
+                </li>
+                <li id="nav-compras" onclick="showModule('compras', event)">
+                    <i class="fa-solid fa-truck-fast"></i> Compras
+                </li>
+                <li id="nav-crm" onclick="showModule('crm', event)">
+                    <i class="fa-solid fa-users"></i> CRM
+                </li>
+                <li id="nav-contabilidad" onclick="showModule('contabilidad', event)">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Contabilidad
+                </li>
+                <li id="nav-sistema" onclick="showModule('sistema', event)">
+                    <i class="fa-solid fa-gear"></i> Administración
+                </li>
+            </ul>
+            <div class="sidebar-footer">MKParts ERP v2.0 &bull; Django + Docker</div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <i class="fa-solid fa-motorcycle" style="color:var(--accent); margin-right:6px"></i>
+                    MKParts ERP &mdash; <span id="current-module-name">Dashboard</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:16px">
+                    <!-- Rol badge -->
+                    <span style="background:rgba(220,38,38,0.12); border:1px solid rgba(220,38,38,0.25); color:var(--accent-hover); padding:4px 12px; border-radius:20px; font-size:0.78rem; font-weight:600">
+                        <i class="fa-solid fa-shield-halved"></i> {{ rol }}
+                    </span>
+                    <div class="user-info">
+                        <div style="width:32px; height:32px; border-radius:50%; background:var(--accent-dim); border:2px solid var(--accent-border); display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--accent-hover); font-size:0.85rem">
+                            {{ nombre|first|upper }}
+                        </div>
+                        <span>{{ nombre }}</span>
+                    </div>
+                    <!-- Logout -->
+                    <form method="POST" action="/logout/" style="margin:0">
+                        {% csrf_token %}
+                        <button type="submit" title="Cerrar sesión" style="background:transparent; border:1px solid var(--border-color); color:var(--text-muted); padding:6px 12px; border-radius:8px; cursor:pointer; font-size:0.8rem; transition:all 0.2s; display:flex; align-items:center; gap:6px">
+                            <i class="fa-solid fa-right-from-bracket"></i> Salir
+                        </button>
+                    </form>
+                </div>
+            </header>
+
+            <div id="module-content" class="content-area">
+                <div class="loading-state">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Iniciando ERP...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast notifications container -->
+    <div id="toast-container"></div>
+
+    <!-- Modal flotante -->
+    <div id="modal-container" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; align-items:center; justify-content:center; backdrop-filter:blur(4px)">
+        <div id="modal-box" class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal</h3>
+                <button onclick="closeModal()" class="modal-close"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MKParts ERP — Iniciar Sesión</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:       #0a0a0f;
+            --card:     #111118;
+            --border:   #1e1e2e;
+            --accent:   #dc2626;
+            --accent-h: #ef4444;
+            --text:     #f0f0f5;
+            --muted:    #6b6b8a;
+            --success:  #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated background blobs */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            animation: drift 14s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+        .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; left: -200px; animation-delay: 0s; }
+        .blob-2 { width: 400px; height: 400px; background: #7c3aed; bottom: -150px; right: -100px; animation-delay: -5s; }
+        .blob-3 { width: 300px; height: 300px; background: var(--accent); bottom: 30%; left: 30%; animation-delay: -9s; }
+
+        @keyframes drift {
+            from { transform: translate(0, 0) scale(1); }
+            to   { transform: translate(40px, 30px) scale(1.08); }
+        }
+
+        /* Grid lines background */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                linear-gradient(rgba(220,38,38,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220,38,38,0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+        }
+
+        .login-wrapper {
+            position: relative; z-index: 10;
+            display: flex;
+            width: 900px;
+            min-height: 540px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 0 1px var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Left panel — branding */
+        .login-brand {
+            flex: 1;
+            background: linear-gradient(145deg, #1a0505 0%, #2d0808 40%, #1a0a0a 100%);
+            border-right: 1px solid rgba(220,38,38,0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .brand-logo {
+            width: 80px; height: 80px;
+            background: rgba(220,38,38,0.15);
+            border: 2px solid rgba(220,38,38,0.4);
+            border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: var(--accent-h);
+            margin-bottom: 24px;
+            box-shadow: 0 0 40px rgba(220,38,38,0.2);
+        }
+
+        .brand-name {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .brand-name span { color: var(--accent-h); }
+
+        .brand-sub {
+            font-size: 0.9rem;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .brand-features {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 100%;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(220,38,38,0.15);
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .feature-item i {
+            color: var(--accent-h);
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .feature-item span {
+            font-size: 0.83rem;
+            color: #9090b0;
+        }
+
+        /* Right panel — form */
+        .login-form-panel {
+            flex: 1;
+            background: var(--card);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 52px 48px;
+        }
+
+        .form-header { margin-bottom: 36px; }
+
+        .form-header h2 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .form-header p { font-size: 0.88rem; color: var(--muted); }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #8080a0;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 13px 14px 13px 40px;
+            background: #0d0d16;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: rgba(220,38,38,0.6);
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.1);
+        }
+
+        .form-control::placeholder { color: var(--muted); }
+
+        .error-box {
+            background: rgba(220,38,38,0.1);
+            border: 1px solid rgba(220,38,38,0.3);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            color: #f87171;
+            font-size: 0.87rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--accent) 0%, #b91c1c 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 6px 24px rgba(220,38,38,0.35);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 32px rgba(220,38,38,0.5);
+        }
+
+        .btn-login:active { transform: translateY(0); }
+
+        .login-footer {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--muted);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .divider hr { flex: 1; border: none; border-top: 1px solid var(--border); }
+        .divider span { font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+
+        .hint-box {
+            background: rgba(34,197,94,0.07);
+            border: 1px solid rgba(34,197,94,0.2);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 0.8rem;
+            color: #86efac;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <div class="login-wrapper">
+        <!-- Branding -->
+        <div class="login-brand">
+            <div class="brand-logo">
+                <i class="fa-solid fa-motorcycle"></i>
+            </div>
+            <div class="brand-name">MK<span>Parts</span></div>
+            <p class="brand-sub">Sistema ERP para repuestos de motocicletas.<br>Guatemala — Powered by Django & PostgreSQL.</p>
+
+            <div class="brand-features">
+                <div class="feature-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Autenticación segura con roles y permisos</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard en tiempo real con métricas clave</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-boxes-stacked"></i>
+                    <span>Gestión completa de inventario y ventas</span>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-database"></i>
+                    <span>Base de datos Docker PostgreSQL compartida</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario -->
+        <div class="login-form-panel">
+            <div class="form-header">
+                <h2>Bienvenido de vuelta 👋</h2>
+                <p>Ingresa tus credenciales para acceder al sistema</p>
+            </div>
+
+            {% if error %}
+            <div class="error-box">
+                <i class="fa-solid fa-circle-xmark"></i>
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/login/">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-user"></i>
+                        <input
+                            type="text"
+                            name="username"
+                            class="form-control"
+                            placeholder="Ej: admin"
+                            required
+                            autofocus
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock"></i>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="••••••••"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <div class="divider"><hr><span>Credenciales de acceso</span><hr></div>
+
+            <div class="hint-box">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Usuario: <strong>admin</strong> &nbsp;|&nbsp; Contraseña: <strong>admin1234</strong> &nbsp;(Primera vez)</span>
+            </div>
+
+            <div class="login-footer">
+                MKParts ERP v2.0 &bull; Django + PostgreSQL Docker
+                <br>Panel admin: <a href="/admin/" style="color:var(--accent-h)">/admin/</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: mkparts-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 124566
+      POSTGRES_DB: ProyectoTi
+    ports:
+      - "5433:5432" # Expuesto en el puerto 5433 localmente
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # Este script se ejecutará automáticamente la primera vez que inicie el contenedor
+      - ./init-db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  web:
+    build: .
+    container_name: mkparts-web
+    restart: always
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db
+
+volumes:
+  db_data:

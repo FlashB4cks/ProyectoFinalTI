@@ -1,0 +1,34 @@
+# Entorno Virtual de Python
+env/
+venv/
+.env/
+ENV/
+*.venv
+
+# Dependencias de Node.js
+node_modules/
+package-lock.json
+
+# Cache de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Archivos de Base de Datos Local
+db.sqlite3
+*.db
+
+# Archivos del Sistema Operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Reportes Locales de RPA (Se generarán nuevos en el servidor)
+reportes/Reporte_Ventas_Automatizado_*.xlsx
+reportes/Alerta_Stock_Critico_*.txt
+
+# Archivos de Entorno de Render
+.render/
