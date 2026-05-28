@@ -101,7 +101,12 @@ def importar_nuevos_productos():
             ["Bateria de Gel 12V", "Eléctrico", "300.00", "480.00", "5"],
             ["Aceite de Transmision 80W90 1L", "Lubricantes", "45.00", "75.00", "25"],
             ["Espejo Retrovisor Deportivo", "Accesorios", "80.00", "140.00", "8"],
-            ["Pastilla Freno Cerámica Delantera", "Frenos", "95.00", "160.00", "3"]
+            ["Pastilla Freno Cerámica Delantera", "Frenos", "95.00", "160.00", "3"],
+            ["Llanta Trasera 130/70-17", "Llantas", "600.00", "850.00", "10"],
+            ["Pastillas de Freno Delanteras", "Frenos", "150.00", "250.00", "12"],
+            ["Aceite Sintético 10W-40 1L", "Lubricantes", "110.00", "180.00", "15"],
+            ["Bujía NGK Iridium", "Motor", "70.00", "120.00", "20"],
+            ["Casco Integral Certificado DOT", "Accesorios", "950.00", "1500.00", "8"]
         ]
         with open(ruta_csv, mode="w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
