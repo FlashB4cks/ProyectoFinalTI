@@ -474,10 +474,33 @@ def api_run_rpa(request):
         stdout, stderr = process.communicate()
         
         if process.returncode == 0:
+            # Detectar y extraer archivos generados desde el terminal (stdout)
+            generated_files = []
+            for line in stdout.split('\n'):
+                if "EXCEL GENERADO:" in line:
+                    parts = line.split("EXCEL GENERADO:")
+                    if len(parts) > 1:
+                        filepath = parts[1].strip()
+                        filename = os.path.basename(filepath)
+                        generated_files.append({
+                            'type': 'excel',
+                            'name': filename
+                        })
+                elif "ALERTA GENERADA:" in line:
+                    parts = line.split("ALERTA GENERADA:")
+                    if len(parts) > 1:
+                        filepath = parts[1].strip()
+                        filename = os.path.basename(filepath)
+                        generated_files.append({
+                            'type': 'txt',
+                            'name': filename
+                        })
+                        
             return Response({
                 'success': True,
                 'message': 'RPA ejecutado exitosamente en el servidor.',
-                'stdout': stdout
+                'stdout': stdout,
+                'files': generated_files
             })
         else:
             return Response({
@@ -490,3 +513,26 @@ def api_run_rpa(request):
             'success': False,
             'error': str(e)
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# ====== DESCARGAR REPORTE RPA ======
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def api_download_report(request):
+    import os
+    from django.conf import settings
+    from django.http import FileResponse, Http404
+    
+    filename = request.GET.get('file', '')
+    if not filename:
+        return Response({'error': 'Nombre de archivo requerido.'}, status=400)
+        
+    # Seguridad: prevenir Directory Traversal usando basename
+    filename = os.path.basename(filename)
+    file_path = os.path.join(settings.BASE_DIR, 'reportes', filename)
+    
+    if os.path.exists(file_path):
+        response = FileResponse(open(file_path, 'rb'), as_attachment=True, filename=filename)
+        return response
+    else:
+        raise Http404("El reporte solicitado no existe en el servidor.")

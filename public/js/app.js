@@ -460,6 +460,19 @@ async function ejecutarRPA(e) {
                 showToast('✓ RPA completado con éxito. Datos actualizados.', 'success');
                 await loadVentasTable();
                 
+                // Descargar archivos generados de forma automática en el equipo local
+                if (data.files && data.files.length > 0) {
+                    data.files.forEach(file => {
+                        const link = document.createElement('a');
+                        link.href = API + '/download-report/?file=' + encodeURIComponent(file.name);
+                        link.setAttribute('download', file.name);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        showToast(`📥 Descargando ${file.name}...`, 'success');
+                    });
+                }
+                
                 // Redimensionar para la consola grande retro
                 modalBox.classList.add('large');
                 

@@ -41,4 +41,5 @@ urlpatterns = [
 
     # RPA
     path('run-rpa/', views.api_run_rpa, name='api-run-rpa'),
+    path('download-report/', views.api_download_report, name='api-download-report'),
 ]
